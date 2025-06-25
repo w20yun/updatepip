@@ -2,14 +2,11 @@ import datetime
 import os
 import subprocess
 
-version = "2.1.0"
+version = "2.2.1"
 changelog = f"""
 ## 版本 {version} - {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 # 更新内容
-- 优化输入框和按钮布局
-- 按钮字体加粗加大
-- 输出框字体调大
-- 修复若干界面细节
+- 优化部分bug
 """
 
 readme_path = "README.md"

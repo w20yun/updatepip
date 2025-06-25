@@ -1,4 +1,4 @@
-__version__ = "2.1.0"
+__version__ = "2.2.0"
 
 from tkinter import filedialog, messagebox
 from typing import List, Dict
@@ -10,6 +10,7 @@ import queue
 import sys
 import re
 import os
+import webbrowser
 
 LANGS = {
     'zh': {
@@ -46,6 +47,11 @@ LANGS = {
         'msg_switch_zh': '切换到中文',
         'msg_switch_en': 'Switch to English',
         'msg_no_update': '没有需要更新的包。',
+        'msg_checking_update': '正在检查更新...',
+        'msg_update_available': '检测到新版本 V{version}',
+        'msg_update_manual': '由于程序已打包为exe文件，无法自动更新。\n请访问以下地址手动下载新版本：\nhttps://github.com/w20yun/updatepip/releases',
+        'msg_no_new_version': '当前已是最新版',
+        'msg_update_check_failed': '检查更新失败: {e}',
     },
     'en': {
         'title': 'Python Package Install/Update Tool',
@@ -81,6 +87,11 @@ LANGS = {
         'msg_switch_zh': '切换到中文',
         'msg_switch_en': 'Switch to English',
         'msg_no_update': 'No packages to update.',
+        'msg_checking_update': 'Checking for updates...',
+        'msg_update_available': 'New version V{version} available',
+        'msg_update_manual': 'Since the program is packaged as an exe file, it cannot be updated automatically.\nPlease visit the following address to manually download the new version:\nhttps://github.com/w20yun/updatepip/releases',
+        'msg_no_new_version': 'Current version is up to date',
+        'msg_update_check_failed': 'Update check failed: {e}',
     }
 }
 
@@ -325,77 +336,41 @@ class PackageInstallerGUI:
 
     def _check_update(self):
         """
-        检查并自动从 GitHub 更新自身。
-        请将 remote_py_url 替换为你的 GitHub 仓库 raw 文件地址，例如：
-        https://raw.githubusercontent.com/yourusername/yourrepo/main/updatepip.py
+        检查更新 - 简化版本，适用于exe
         """
-        remote_py_url = 'https://raw.githubusercontent.com/w20yun/updatepip/main/updatepip.py'  # TODO: 替换为你的raw地址
-        self._add_message('正在检查更新...')
+        remote_py_url = 'https://raw.githubusercontent.com/w20yun/updatepip/main/updatepip.py'
+        self._add_message(self._t('msg_checking_update'))
 
         def do_update():
             try:
-                # 下载远程 updatepip.py 文件
+                # 下载远程文件
                 with urllib.request.urlopen(remote_py_url, timeout=10) as f:
                     remote_code = f.read().decode('utf-8')
+                
                 # 提取远程版本号
                 match = re.search(r'__version__\s*=\s*["\"]([\d\.]+)["\"]', remote_code)
                 if not match:
                     self._add_message('无法获取远程版本号')
                     return
                 remote_version = match.group(1)
+                
                 if self._check_version_newer(__version__, remote_version):
-                    if messagebox.askyesno('更新', f'检测到新版本 V{remote_version}，是否下载并自动替换？'):
-                        save_path = os.path.abspath(__file__)
-                        try:
-                            with open(save_path, 'w', encoding='utf-8') as f:
-                                f.write(remote_code)
-                            messagebox.showinfo('更新', '更新成功，程序将自动重启！')
-                            self._log_action('UPDATE_SELF', 'updatepip.py', f'更新到V{remote_version}', 'SUCCESS')
-                            self._update_readme(remote_version, remote_code)
-                            self.root.quit()
-                            # 自动重启
-                            python = sys.executable
-                            os.execl(python, python, *sys.argv)
-                        except Exception as e:
-                            messagebox.showerror('更新', f'写入文件失败: {e}')
-                            self._log_action('UPDATE_SELF', 'updatepip.py', 'FAIL', str(e))
+                    # 提示用户手动下载
+                    messagebox.showinfo('更新', 
+                        f'{self._t("msg_update_available", version=remote_version)}\n\n'
+                        f'{self._t("msg_update_manual")}')
+                    
+                    # 打开浏览器
+                    webbrowser.open('https://github.com/w20yun/updatepip/releases')
+                    
                 else:
-                    self._add_message('当前已是最新版')
+                    self._add_message(self._t('msg_no_new_version'))
+                    
             except Exception as e:
-                self._add_message(f'检查更新失败: {e}')
-                self._log_action('UPDATE_SELF', 'updatepip.py', 'ERROR', str(e))
+                self._add_message(self._t('msg_update_check_failed', e=e))
+                self._log_action('UPDATE_SELF', 'updatepip.exe', 'ERROR', str(e))
 
         threading.Thread(target=do_update, daemon=True).start()
-
-    def _update_readme(self, remote_version, remote_code):
-        import datetime, re
-        readme_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'README.md')
-        now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        # 提取更新内容（如有 # 更新内容 或 CHANGELOG 注释块）
-        changelog = ''
-        changelog_match = re.search(r'#\s*更新内容[\s\S]*?(?=^#|^$)', remote_code, re.MULTILINE)
-        if changelog_match:
-            changelog = changelog_match.group(0).strip()
-        else:
-            # 也可自定义其它提取方式
-            changelog = '自动更新，无详细内容。'
-        update_text = f"\n## 版本 {remote_version} - {now}\n{changelog}\n"
-        try:
-            if os.path.exists(readme_path):
-                with open(readme_path, 'a', encoding='utf-8') as f:
-                    f.write(update_text)
-            else:
-                with open(readme_path, 'w', encoding='utf-8') as f:
-                    f.write(f"# updatepip\n\n{update_text}")
-        except Exception as e:
-            self._log_action('README_UPDATE', 'README.md', 'FAIL', str(e))
-
-    def _get_remote_version(self, url):
-        try:
-            with urllib.request.urlopen(url, timeout=5) as f:
-                return f.read().decode().strip()
-        except Exception as e:
-            return None
 
     def _check_version_newer(self, local_version, remote_version):
         def parse(v):
@@ -404,16 +379,6 @@ class PackageInstallerGUI:
         try:
             return parse(remote_version) > parse(local_version)
         except Exception:
-            return False
-
-    def _download_file(self, url, save_path):
-        try:
-            with urllib.request.urlopen(url, timeout=10) as response:
-                data = response.read()
-            with open(save_path, 'wb') as f:
-                f.write(data)
-            return True
-        except Exception as e:
             return False
 
     def _restore_entry_placeholder(self, event):
@@ -428,6 +393,18 @@ class PackageInstallerGUI:
         self.lang = lang
         self._refresh_texts()
         self._add_message(self._t('msg_switch_zh') if lang == 'zh' else self._t('msg_switch_en'))
+
+    def _refresh_texts(self):
+        """刷新界面文本"""
+        self.root.title(self._t('title'))
+        self.entry_package.delete(0, tk.END)
+        self.entry_package.insert(0, self._t('input_placeholder'))
+        self.entry_package.config(fg='grey')
+        
+        self.btn_install.config(text=self._t('btn_install'))
+        self.btn_file.config(text=self._t('btn_file'))
+        self.btn_query.config(text=self._t('btn_query'))
+        self.btn_update.config(text=self._t('btn_update'))
 
     def _add_context_menu(self, widget, is_text=False):
         menu = tk.Menu(widget, tearoff=0)
