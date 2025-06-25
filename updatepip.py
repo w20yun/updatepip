@@ -1,14 +1,18 @@
 __version__ = "2.1.0"
 
-import tkinter as tk
+
 from tkinter import filedialog, messagebox
+from typing import List, Dict
+import urllib.request
+import tkinter as tk
 import subprocess
 import threading
 import queue
+import sys
 import re
-from typing import List, Dict
 import os
-import urllib.request
+
+
 
 LANGS = {
     'zh': {
@@ -350,10 +354,13 @@ class PackageInstallerGUI:
                         try:
                             with open(save_path, 'w', encoding='utf-8') as f:
                                 f.write(remote_code)
-                            messagebox.showinfo('更新', '更新成功，请重启程序！')
+                            messagebox.showinfo('更新', '更新成功，程序将自动重启！')
                             self._log_action('UPDATE_SELF', 'updatepip.py', f'更新到V{remote_version}', 'SUCCESS')
                             self._update_readme(remote_version, remote_code)
                             self.root.quit()
+                            # 自动重启
+                            python = sys.executable
+                            os.execl(python, python, *sys.argv)
                         except Exception as e:
                             messagebox.showerror('更新', f'写入文件失败: {e}')
                             self._log_action('UPDATE_SELF', 'updatepip.py', 'FAIL', str(e))
