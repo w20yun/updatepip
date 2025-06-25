@@ -1,3 +1,5 @@
+__version__ = "2.0.0"
+
 import tkinter as tk
 from tkinter import filedialog, messagebox
 import subprocess
