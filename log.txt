@@ -1,0 +1,16 @@
+[2025-06-26 00:25:15] LOGIN | user=w20yun | repo=updatepip | file= | result=success
+[2025-06-26 00:25:32] UPLOAD | user=w20yun | repo=updatepip | file=updatepip/updatepip.py | result=fail: {"message":"Not Found","documentation_url":"https://docs.github.com/rest/repos/contents#create-or-update-file-contents","status":"404"}
+[2025-06-26 00:29:48] LOGIN | user=w20yun | repo=updatepip | file= | result=success
+[2025-06-26 00:29:52] UPLOAD | user=w20yun | repo=updatepip | file=updatepip.py | result=fail: {"message":"Not Found","documentation_url":"https://docs.github.com/rest/repos/contents#create-or-update-file-contents","status":"404"}
+[2025-06-26 00:37:29] EXCEPTION | user= | repo= | file= | result=Traceback (most recent call last):
+  File "E:\python\python_study\pipinstall\auto_commit.py", line 430, in <module>
+    root.mainloop()
+  File "F:\python\Lib\tkinter\__init__.py", line 1485, in mainloop
+    self.tk.mainloop(n)
+KeyboardInterrupt
+
+[2025-06-26 00:49:11] LOGIN | user=w20yun | repo=updatepip | file= | result=success
+[2025-06-26 00:50:25] UPLOAD | user=w20yun | repo=updatepip | file=updatepip.py | result=success
+[2025-06-26 00:50:46] UPLOAD | user=w20yun | repo=updatepip | file=updatepip.py | result=success
+[2025-06-26 01:19:41] LOGIN | user=w20yun | repo=updatepip | file= | result=success
+[2025-06-26 01:21:12] UPLOAD | user=w20yun | repo=updatepip | file=updatepip.py | result=success
