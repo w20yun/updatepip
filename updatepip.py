@@ -1,4 +1,4 @@
-__version__ = "2.0.0"
+__version__ = "2.1.0"
 
 from tkinter import filedialog, messagebox
 from typing import List, Dict
@@ -11,7 +11,42 @@ import sys
 import re
 import os
 
-
+LANGS = {
+    'zh': {
+        'title': 'Python包安装更新工具',
+        'input_placeholder': '请输入包名...',
+        'btn_install': '直接更新',
+        'btn_file': '文件安装',
+        'btn_query': '查询',
+        'btn_update': '全部更新',
+        'menu_file': '文件',
+        'menu_exit': '退出',
+        'menu_lang': '语言',
+        'menu_help': '帮助',
+        'menu_about': '关于',
+        'about': '作者: w20yun\n版本: V{version}\n文件: updatepip.py\n描述: 更新/安装python包',
+        'msg_input_required': '请先输入包名！',
+        'msg_no_file': '没有选择文件',
+        'msg_no_packages': '没有需要升级的包。',
+        'msg_getting_list': '获取pip更新列表，请稍等...',
+        'msg_getting_update': '正在获取需要更新的包...',
+        'msg_all_done': '恭喜！全部升级完成了！',
+        'msg_file_read_error': '读取文件失败: {e}',
+        'msg_pkg_done': '第 {idx} 个包升级完成',
+        'msg_pkg_fail': '升级 {pkg} 失败: {err}',
+        'msg_pkg_error': '升级 {pkg} 时发生错误: {err}',
+        'msg_pkg_updating': '正在升级第 {idx} 个包: {pkg}',
+        'msg_pkg_updating_one': '正在升级 {pkg} ...',
+        'msg_pkg_done_one': '{pkg} 升级完成！',
+        'msg_pkg_error_one': '升级 {pkg} 时发生错误: {err}',
+        'msg_pkg_fail_one': '升级 {pkg} 失败: {err}',
+        'msg_need_update_count': '需更新的包数量: {count}',
+        'msg_pkg_version': '{name}: 当前{version} → 最新{latest}',
+        'msg_update_count': '共需更新 {count} 个包，开始升级...',
+        'msg_switch_zh': '切换到中文',
+        'msg_switch_en': 'Switch to English',
+        'msg_no_update': '没有需要更新的包。',
+    },
     'en': {
         'title': 'Python Package Install/Update Tool',
         'input_placeholder': 'Please enter package name...',
