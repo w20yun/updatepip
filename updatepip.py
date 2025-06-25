@@ -1,11 +1,3 @@
-__version__ = "2.1.0"
-
-# 更新内容
-# - 优化输入框和按钮布局
-# - 按钮字体加粗加大
-# - 输出框字体调大
-# - 修复若干界面细节
-
 import tkinter as tk
 from tkinter import filedialog, messagebox
 import subprocess

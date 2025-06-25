@@ -13,8 +13,9 @@ changelog = f"""
 """
 
 readme_path = "README.md"
+log_path = "updatepip.log"
 
-# 2. 追加 changelog 到 README.md（如已存在则不重复追加）
+# 2. changelog 追加前先检查是否已存在
 if os.path.exists(readme_path):
     with open(readme_path, "r", encoding="utf-8") as f:
         content = f.read()
@@ -25,7 +26,13 @@ else:
     with open(readme_path, "w", encoding="utf-8") as f:
         f.write("# 项目更新日志\n" + changelog)
 
-# 3. 自动执行 git 命令
+# 3. 日志文件超过 1MB 时自动清理
+if os.path.exists(log_path) and os.path.getsize(log_path) > 1024 * 1024:
+    with open(log_path, "w", encoding="utf-8") as f:
+        f.write("")
+
+# 4. 自动执行 git 命令，处理编码问题
+
 def run(cmd):
     print(f"执行: {cmd}")
     result = subprocess.run(cmd, shell=True, capture_output=True, text=True, encoding="utf-8", errors="ignore")
@@ -35,6 +42,8 @@ def run(cmd):
         print(result.stderr)
     return result.returncode
 
+# 5. 先 pull --rebase 再 add/commit/push
+run("git pull --rebase")
 run("git add .")
 run(f'git commit -m "自动更新代码和changelog"')
 run("git push")
