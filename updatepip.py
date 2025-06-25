@@ -1,5 +1,4 @@
-__version__ = "2.1.3"
-
+__version__ = "2.1.2"
 
 from tkinter import filedialog, messagebox
 from typing import List, Dict
@@ -11,8 +10,6 @@ import queue
 import sys
 import re
 import os
-
-
 
 LANGS = {
     'zh': {
@@ -113,7 +110,6 @@ class PackageInstallerGUI:
         self.root.geometry(alignstr)
         self.root.minsize(width, height)
         self.root.resizable(width=False, height=False)
-
         self.msg_queue = queue.Queue()
         self._build_widgets()
         self._build_menu()
@@ -342,7 +338,6 @@ class PackageInstallerGUI:
                 with urllib.request.urlopen(remote_py_url, timeout=10) as f:
                     remote_code = f.read().decode('utf-8')
                 # 提取远程版本号
-                import re
                 match = re.search(r'__version__\s*=\s*["\"]([\d\.]+)["\"]', remote_code)
                 if not match:
                     self._add_message('无法获取远程版本号')
