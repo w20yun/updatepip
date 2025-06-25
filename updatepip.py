@@ -25,7 +25,7 @@ LANGS = {
         'menu_lang': '语言',
         'menu_help': '帮助',
         'menu_about': '关于',
-        'about': '作者: w20yun\n版本: V{version}\n文件: updatepip.py\n描述: 更新/安装python包',
+        'about': '作者: w20yun\n版本: V{version}\n文件: updatepip.exe\n描述: 更新/安装python包',
         'msg_input_required': '请先输入包名！',
         'msg_no_file': '没有选择文件',
         'msg_no_packages': '没有需要升级的包。',
@@ -65,7 +65,7 @@ LANGS = {
         'menu_lang': 'Language',
         'menu_help': 'Help',
         'menu_about': 'About',
-        'about': 'Author: w20yun\nVersion: V{version}\nFile: updatepip.py\nDescribe: Update/Install python packages',
+        'about': 'Author: w20yun\nVersion: V{version}\nFile: updatepip.exe\nDescribe: Update/Install python packages',
         'msg_input_required': 'Please enter a package name!',
         'msg_no_file': 'No file selected',
         'msg_no_packages': 'No packages to update.',
@@ -346,26 +346,26 @@ class PackageInstallerGUI:
                 # 下载远程文件
                 with urllib.request.urlopen(remote_py_url, timeout=10) as f:
                     remote_code = f.read().decode('utf-8')
-                
+
                 # 提取远程版本号
                 match = re.search(r'__version__\s*=\s*["\"]([\d\.]+)["\"]', remote_code)
                 if not match:
                     self._add_message('无法获取远程版本号')
                     return
                 remote_version = match.group(1)
-                
+
                 if self._check_version_newer(__version__, remote_version):
                     # 提示用户手动下载
-                    messagebox.showinfo('更新', 
-                        f'{self._t("msg_update_available", version=remote_version)}\n\n'
-                        f'{self._t("msg_update_manual")}')
-                    
+                    messagebox.showinfo('更新',
+                                        f'{self._t("msg_update_available", version=remote_version)}\n\n'
+                                        f'{self._t("msg_update_manual")}')
+
                     # 打开浏览器
                     webbrowser.open('https://github.com/w20yun/updatepip/releases')
-                    
+
                 else:
                     self._add_message(self._t('msg_no_new_version'))
-                    
+
             except Exception as e:
                 self._add_message(self._t('msg_update_check_failed', e=e))
                 self._log_action('UPDATE_SELF', 'updatepip.exe', 'ERROR', str(e))
@@ -400,7 +400,7 @@ class PackageInstallerGUI:
         self.entry_package.delete(0, tk.END)
         self.entry_package.insert(0, self._t('input_placeholder'))
         self.entry_package.config(fg='grey')
-        
+
         self.btn_install.config(text=self._t('btn_install'))
         self.btn_file.config(text=self._t('btn_file'))
         self.btn_query.config(text=self._t('btn_query'))
