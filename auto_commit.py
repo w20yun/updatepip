@@ -7,6 +7,7 @@ changelog = f"""
 ## 版本 {version} - {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 # 更新内容
 - 优化部分bug
+- 更新可执行文件pdatepip.exe
 """
 
 readme_path = "README.md"
