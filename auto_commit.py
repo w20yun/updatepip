@@ -2,9 +2,9 @@ import datetime
 import os
 import subprocess
 
-# 1. 生成 changelog 内容（可根据实际情况修改）
+version = "2.1.0"
 changelog = f"""
-## 版本 2.1.0 - {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+## 版本 {version} - {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 # 更新内容
 - 优化输入框和按钮布局
 - 按钮字体加粗加大
@@ -15,23 +15,21 @@ changelog = f"""
 readme_path = "README.md"
 log_path = "updatepip.log"
 
-# 2. changelog 追加前先检查是否已存在
+# 只要包含本版本 changelog 标题就不再追加
 if os.path.exists(readme_path):
     with open(readme_path, "r", encoding="utf-8") as f:
         content = f.read()
-    if changelog.strip() not in content:
+    if f"## 版本 {version}" not in content:
         with open(readme_path, "a", encoding="utf-8") as f:
             f.write(changelog)
 else:
     with open(readme_path, "w", encoding="utf-8") as f:
         f.write("# 项目更新日志\n" + changelog)
 
-# 3. 日志文件超过 1MB 时自动清理
+# 日志文件超过 1MB 时自动清理
 if os.path.exists(log_path) and os.path.getsize(log_path) > 1024 * 1024:
     with open(log_path, "w", encoding="utf-8") as f:
         f.write("")
-
-# 4. 自动执行 git 命令，处理编码问题
 
 def run(cmd):
     print(f"执行: {cmd}")
@@ -42,7 +40,6 @@ def run(cmd):
         print(result.stderr)
     return result.returncode
 
-# 5. 先 pull --rebase 再 add/commit/push
 run("git pull --rebase")
 run("git add .")
 run(f'git commit -m "自动更新代码和changelog"')
