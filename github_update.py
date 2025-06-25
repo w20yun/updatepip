@@ -2,7 +2,7 @@ import datetime
 import os
 import subprocess
 
-version = "2.1.0"
+version = "2.1.2"
 changelog = f"""
 ## 版本 {version} - {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 # 更新内容
