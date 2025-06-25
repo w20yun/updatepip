@@ -28,7 +28,7 @@ else:
 # 3. 自动执行 git 命令
 def run(cmd):
     print(f"执行: {cmd}")
-    result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+    result = subprocess.run(cmd, shell=True, capture_output=True, text=True, encoding="utf-8", errors="ignore")
     if result.stdout:
         print(result.stdout)
     if result.stderr:
