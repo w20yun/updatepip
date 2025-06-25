@@ -1,4 +1,4 @@
-__version__ = "2.1.1"
+__version__ = "2.1.2"
 
 
 from tkinter import filedialog, messagebox
@@ -27,7 +27,7 @@ LANGS = {
         'menu_lang': '语言',
         'menu_help': '帮助',
         'menu_about': '关于',
-        'about': '作者: w20yun\n版本: V{version}\n文件: pip install.py\n描述: 更新/安装python包',
+        'about': '作者: w20yun\n版本: V{version}\n文件: updatepip.py\n描述: 更新/安装python包',
         'msg_input_required': '请先输入包名！',
         'msg_no_file': '没有选择文件',
         'msg_no_packages': '没有需要升级的包。',
@@ -62,7 +62,7 @@ LANGS = {
         'menu_lang': 'Language',
         'menu_help': 'Help',
         'menu_about': 'About',
-        'about': 'Author: w20yun\nVersion: V{version}\nFile: pip install.py\nDescribe: Update/Install python packages',
+        'about': 'Author: w20yun\nVersion: V{version}\nFile: updatepip.py\nDescribe: Update/Install python packages',
         'msg_input_required': 'Please enter a package name!',
         'msg_no_file': 'No file selected',
         'msg_no_packages': 'No packages to update.',
