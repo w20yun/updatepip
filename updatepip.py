@@ -1,4 +1,4 @@
-__version__ = "2.2.1"
+__version__ = "2.2.2"
 
 from tkinter import filedialog, messagebox
 from typing import List, Dict
